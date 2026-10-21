@@ -1,0 +1,13 @@
+[project]
+name = "nii-model"
+version = "0.1.0"
+description = "Illustrative bank NII rate-shock model (demo)"
+requires-python = ">=3.10"
+dependencies = ["numpy", "pandas", "matplotlib", "pyyaml"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

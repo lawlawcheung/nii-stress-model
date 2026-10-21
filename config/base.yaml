@@ -1,0 +1,38 @@
+# Assumptions for the illustrative NII model.
+# All figures are made up for demonstration - they are NOT any real bank's.
+#
+# margin : spread added to (beta x cash rate), as a decimal (0.025 = 2.5%)
+# beta   : share of a cash-rate move passed through to the product rate
+# reprice_months : months for the whole book to reprice (1 = immediately)
+# floor  : lowest rate the product can pay/earn (stops negative deposit rates)
+
+meta:
+  name: Illustrative Bank
+  units: AUD m
+  start_cash_rate: 0.036   # 3.60%
+  horizon_months: 24
+
+balance_sheet:
+  # ---- Assets (total 100,000) ----
+  - {name: Variable home loans,  side: asset, balance: 45000, margin: 0.0180, beta: 1.0, reprice_months: 1}
+  - {name: Fixed home loans,     side: asset, balance: 12000, margin: 0.0120, beta: 1.0, reprice_months: 36}
+  - {name: Business loans,       side: asset, balance: 20000, margin: 0.0220, beta: 1.0, reprice_months: 3}
+  - {name: Liquid assets,        side: asset, balance: 18000, margin: 0.0020, beta: 1.0, reprice_months: 6}
+  - {name: Other assets,         side: asset, balance: 5000}   # non-interest bearing
+
+  # ---- Liabilities (total 92,000) ----
+  - {name: Transaction deposits, side: liability, balance: 22000, margin: 0.0000,  beta: 0.05, reprice_months: 1, floor: 0.0}
+  - {name: Savings deposits,     side: liability, balance: 25000, margin: -0.0100, beta: 0.70, reprice_months: 1, floor: 0.0}
+  - {name: Term deposits,        side: liability, balance: 20000, margin: 0.0005,  beta: 1.00, reprice_months: 9, floor: 0.0}
+  - {name: Wholesale funding,    side: liability, balance: 25000, margin: 0.0110,  beta: 1.00, reprice_months: 3}
+
+  # ---- Equity (8,000) ----
+  - {name: Equity,               side: equity, balance: 8000}
+
+# Cash-rate scenarios. shock_bp = size of shock in basis points;
+# ramp_months = months to phase it in (omit for an instantaneous shock).
+scenarios:
+  base: {}
+  +200bp parallel: {shock_bp: 200}
+  -200bp parallel: {shock_bp: -200}
+  +200bp ramp (12m): {shock_bp: 200, ramp_months: 12}
